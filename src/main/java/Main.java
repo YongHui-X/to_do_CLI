@@ -14,6 +14,10 @@ public class Main {
             case "add" -> manager.addTask(args[1]);
             case "update" -> manager.updateTask(Integer.parseInt(args[1]), args[2]);
             case "delete" -> manager.deleteTask(Integer.parseInt(args[1]));
+            case "in-progress" -> manager.markInProgress(Integer.parseInt(args[1]));
+            case "mark-done" -> manager.markDone(Integer.parseInt(args[1]));
+            case "list" -> manager.listTasks(args.length > 1 ? args[1] : null); //f the user provided a second argument, use it — otherwise pass null
+            default -> System.out.println("Unknown command");
         }
     }
 }

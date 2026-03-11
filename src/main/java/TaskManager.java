@@ -1,6 +1,7 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class TaskManager {
@@ -14,6 +15,14 @@ public class TaskManager {
                 .filter(t-> t.getId() == id)
                 .findFirst()
                 .orElse(null);
+    }
+
+    public boolean isNotFound(Task task){
+        if (task == null){
+            System.out.println("Task not found");
+            return true;
+        }
+        return false;
     }
 
     public void addTask(String description){
@@ -44,10 +53,7 @@ public class TaskManager {
         List<Task> tasks = fileHandler.readTasks(); // fresh read every time
         Task task = findById(tasks, id);
 
-        if (task == null){
-            System.out.println("Task not found");
-            return;
-        }
+        if (isNotFound(task)) return;
 
         String formattedDateTime = LocalDateTime.now().format(customFormatter);
 
@@ -63,12 +69,55 @@ public class TaskManager {
         List<Task> tasks = fileHandler.readTasks();
         Task task = findById(tasks, id);
 
-        if (task == null){
-            System.out.println("Task not found");
-            return;
-        }
+        if (isNotFound(task)) return;
+
         tasks.remove(task);
         fileHandler.writeTasks(tasks);
         System.out.println("Task deleted successfully");
     }
+
+    public void markInProgress(int id){
+        List<Task> tasks = fileHandler.readTasks();
+        Task task = findById(tasks, id);
+
+        if (isNotFound(task)) return;
+
+        task.setStatus("in-progress");
+        String formattedDateTime = LocalDateTime.now().format(customFormatter);
+        task.setUpdatedAt(formattedDateTime);
+        fileHandler.writeTasks(tasks);
+        System.out.println("Task marked in progress");
+    }
+
+    public void markDone(int id){
+        List<Task> tasks = fileHandler.readTasks();
+        Task task = findById(tasks, id);
+
+        if (isNotFound(task)) return;
+
+        task.setStatus("done");
+        String formattedDateTime = LocalDateTime.now().format(customFormatter);
+        task.setUpdatedAt(formattedDateTime);
+        fileHandler.writeTasks(tasks);
+        System.out.println("Task marked done");
+    }
+
+    public void listTasks(String filter){
+        List<Task> tasks = fileHandler.readTasks();
+        List<Task> result;
+
+        if (filter == null) {
+            result = tasks;
+        } else {
+            result = tasks.stream()
+                    .filter(t -> t.getStatus().equals(filter))
+                    .collect(Collectors.toList());
+        }
+
+        for (Task t : result){
+            System.out.println("[" + t.getStatus() + "] " + t.getId() + " - " + t.getDescription());
+        }
+    }
+
+
 }
