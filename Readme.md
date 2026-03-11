@@ -3,6 +3,7 @@
 A command-line to-do list app built with Java. Tasks are stored locally in a `tasks.json` file in the current directory.
 
 Task 1 is deleted.
+
 <img width="336" height="95" alt="Screenshot 2026-03-11 161618" src="https://github.com/user-attachments/assets/cb9e5fea-3d61-4459-806a-e504c358cf7e" />
 
 ## Tech Stack
